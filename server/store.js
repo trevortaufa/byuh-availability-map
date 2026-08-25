@@ -26,7 +26,9 @@ export async function readCoords() {
   try {
     // useCache: false — the CDN would otherwise serve a stale copy straight
     // after a save, and the editor would appear to lose the pin you just moved.
-    const found = await get(BLOB_PATH, { useCache: false })
+    // access is required on reads too, not just writes — omitting it fails
+    // the call outright rather than defaulting to the store's own setting.
+    const found = await get(BLOB_PATH, { access: 'private', useCache: false })
     if (!found) return { coords: seedCoords(), source: 'seed', updatedAt: null }
 
     const text = found.blob?.text
