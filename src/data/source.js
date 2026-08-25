@@ -2,42 +2,74 @@
  * The seam.
  *
  * Every part of the UI reads facilities through this module and nothing else.
- * Today it joins a scraper-written JSON file to a hand-maintained coordinates
- * file. Later it will hit a database or a CMS API. As long as the returned
- * shape stays the same, that swap touches this file only.
+ * Hours come from the scraper as a bundled JSON file; coordinates come from the
+ * server, because those are edited live through the admin panel.
  *
  * Rule: no component imports facilities.json or coords.json directly.
- *
- * Hours and locations come from different places on purpose. Hours are scraped
- * and change often; locations are placed by hand and change almost never.
- * Joining them here means nudging a pin is a file save and a hot reload, not a
- * 40-second re-scrape of four byuh.edu pages.
  */
 import raw from './facilities.json'
-import coordsFile from './coords.json'
+import bundledCoords from './coords.json'
+
+const API = '/api/coords'
+
+function stripComment(obj) {
+  const { _comment, ...rest } = obj
+  return rest
+}
 
 /**
- * @returns {Promise<{generatedAt: string, facilities: Facility[]}>}
+ * Coordinates, preferring the live store.
+ *
+ * Falls back to the file committed in the repo when the API is unreachable —
+ * which is the normal case under plain `npm run dev`, since Vite alone does not
+ * run serverless functions. A map with slightly stale pins beats no map.
+ */
+async function fetchCoords() {
+  try {
+    const res = await fetch(API, { cache: 'no-store' })
+    if (!res.ok) throw new Error(`${res.status}`)
+    const data = await res.json()
+    return { coords: data.coords ?? {}, source: data.source ?? 'api' }
+  } catch {
+    return { coords: stripComment(bundledCoords), source: 'bundled' }
+  }
+}
+
+/**
+ * @returns {Promise<{generatedAt: string, coordsSource: string, facilities: Facility[]}>}
  */
 export async function getFacilities() {
+  const { coords, source } = await fetchCoords()
+
   const facilities = raw.facilities.map((f) => {
-    const entry = coordsFile[f.id]
+    const entry = coords[f.id]
     return {
       ...f,
       // null, not a guessed default: a facility with no location is shown in
       // the list without a pin rather than dropped, or worse, placed at [0,0]
       // in the Gulf of Guinea.
-      coords: entry?.coords ?? null,
-      coordsVerified: entry?.verified ?? false,
+      coords: Array.isArray(entry?.coords) ? entry.coords : null,
+      coordsVerified: entry?.verified === true,
     }
   })
 
-  return { generatedAt: raw.generatedAt, facilities }
+  return { generatedAt: raw.generatedAt, coordsSource: source, facilities }
 }
 
-/** The current coordinates file, for the dev-only pin editor to start from. */
-export function getCoordsFile() {
-  return coordsFile
+/** Persist coordinates. Throws with the server's message on failure. */
+export async function saveCoords(coords, token) {
+  const res = await fetch(API, {
+    method: 'PUT',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ coords }),
+  })
+
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.error ?? `save failed (${res.status})`)
+  return data
 }
 
 /**

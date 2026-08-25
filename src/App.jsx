@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { getFacilities, getCoordsFile } from './data/source.js'
+import { getFacilities } from './data/source.js'
 import { getStatus, sortByStatus } from './lib/hours.js'
 import CampusMap, { CAMPUS_CENTER } from './components/CampusMap.jsx'
 import FacilityList from './components/FacilityList.jsx'
@@ -7,13 +7,13 @@ import FilterBar from './components/FilterBar.jsx'
 import EditPanel from './components/EditPanel.jsx'
 
 /**
- * Pin editing is gated on import.meta.env.DEV, which Vite replaces with a
- * literal `false` in a production build. The whole branch is then dead code and
- * gets tree-shaken out, so `?edit=1` does nothing on the deployed site — it is
- * not merely hidden, it is not shipped.
+ * The admin panel is reachable on the live site at ?edit=1.
+ *
+ * It is deliberately not secret. Anyone can open it and drag a pin around their
+ * own screen; nothing persists without the admin token, which is checked on the
+ * server. Hiding the UI would be security theatre — the API is the boundary.
  */
-const EDIT_MODE =
-  import.meta.env.DEV && new URLSearchParams(window.location.search).has('edit')
+const EDIT_MODE = new URLSearchParams(window.location.search).has('edit')
 
 export default function App() {
   const [data, setData] = useState(null)
@@ -83,10 +83,15 @@ export default function App() {
           {EDIT_MODE ? (
             <EditPanel
               facilities={facilities}
-              coordsFile={getCoordsFile()}
               overrides={overrides}
               onPlace={handlePlace}
               onReset={() => setOverrides({})}
+              onSaved={() => {
+                // Re-read from the server so what is on screen is what is
+                // stored, rather than what we hoped we stored.
+                setOverrides({})
+                getFacilities().then(setData)
+              }}
             />
           ) : (
             <>

@@ -1,34 +1,46 @@
-/**
- * Dev-only pin placer.
- *
- * Drag the markers on the map, then copy the result into src/data/coords.json.
- * There is no save endpoint — this is a static site, so the "database" is a
- * file in the repo and you are the write API. That is the honest version of an
- * admin panel at this stage; a real one needs auth and somewhere to write to.
- */
-const round = (n) => Number(n.toFixed(6))
+import { useState } from 'react'
+import { saveCoords } from '../data/source.js'
 
-export default function EditPanel({ facilities, coordsFile, overrides, onPlace, onReset }) {
+/**
+ * Admin panel for facility locations.
+ *
+ * Drag a pin on the map, press Save, and it persists for everyone. The token
+ * lives in localStorage so you enter it once per device — it is never bundled
+ * into the app, and the server rejects any write without it.
+ */
+const TOKEN_KEY = 'byuh-admin-token'
+
+export default function EditPanel({ facilities, overrides, onPlace, onReset, onSaved }) {
+  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) ?? '')
+  const [status, setStatus] = useState(null)
+  const [saving, setSaving] = useState(false)
+
   const moved = Object.keys(overrides)
   const unplaced = facilities.filter((f) => !Array.isArray(f.coords))
 
-  // Rebuild the whole file so it can be pasted over the existing one wholesale,
-  // rather than hand-merging a few changed lines.
-  const merged = { ...coordsFile }
+  // Send the whole map, not just what moved — the server replaces the document,
+  // so anything omitted would be deleted.
+  const payload = {}
   for (const f of facilities) {
-    const override = overrides[f.id]
-    if (override) {
-      merged[f.id] = { coords: [round(override[0]), round(override[1])], verified: true }
+    if (!Array.isArray(f.coords)) continue
+    payload[f.id] = {
+      coords: f.coords,
+      verified: overrides[f.id] ? true : f.coordsVerified,
     }
   }
-  const json = JSON.stringify(merged, null, 2) + '\n'
 
-  const copy = async () => {
+  const save = async () => {
+    setSaving(true)
+    setStatus(null)
     try {
-      await navigator.clipboard.writeText(json)
-    } catch {
-      // Clipboard needs a secure context. localhost counts, but just in case.
-      window.prompt('Copy this into src/data/coords.json', json)
+      localStorage.setItem(TOKEN_KEY, token)
+      const result = await saveCoords(payload, token)
+      setStatus({ ok: true, text: `Saved ${Object.keys(payload).length} pins` })
+      onSaved?.(result)
+    } catch (err) {
+      setStatus({ ok: false, text: err.message })
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -52,21 +64,40 @@ export default function EditPanel({ facilities, coordsFile, overrides, onPlace, 
         </div>
       )}
 
-      <p className="edit-hint">
-        Anything you drag is marked <code>verified: true</code>. Copy the file,
-        paste it over <code>src/data/coords.json</code>, and the map hot-reloads.
-      </p>
+      <label className="edit-field">
+        <span>Admin token</span>
+        <input
+          type="password"
+          value={token}
+          onChange={(e) => setToken(e.target.value)}
+          placeholder="paste once, this device remembers it"
+          autoComplete="off"
+          spellCheck="false"
+        />
+      </label>
 
       <div className="edit-actions">
-        <button type="button" className="chip is-active" onClick={copy} disabled={moved.length === 0}>
-          Copy coords.json
+        <button
+          type="button"
+          className="chip is-active"
+          onClick={save}
+          disabled={saving || !token || moved.length === 0}
+        >
+          {saving ? 'Saving\u2026' : 'Save to live site'}
         </button>
         <button type="button" className="chip" onClick={onReset} disabled={moved.length === 0}>
-          Reset
+          Discard
         </button>
       </div>
 
-      {moved.length > 0 && <pre className="edit-json">{json}</pre>}
+      {status && (
+        <p className={`edit-status ${status.ok ? 'is-ok' : 'is-bad'}`}>{status.text}</p>
+      )}
+
+      <p className="edit-hint">
+        Saving replaces every pin position on the live site immediately. Hours are
+        still scraped and deployed separately.
+      </p>
     </section>
   )
 }

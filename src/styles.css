@@ -343,3 +343,35 @@ body {
   font-size: 0.6875rem;
   line-height: 1.45;
 }
+
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.edit-field input {
+  min-height: 2.75rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--panel-hi);
+  border-radius: 0.5rem;
+  background: var(--panel);
+  color: var(--text);
+  /* 16px. Anything smaller and iOS Safari zooms the page on focus. */
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.edit-status {
+  margin: 0 0 0.75rem;
+  font-size: 0.8125rem;
+}
+.edit-status.is-ok {
+  color: var(--open);
+}
+.edit-status.is-bad {
+  color: var(--closed);
+}
