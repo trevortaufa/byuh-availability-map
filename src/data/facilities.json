@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T21:29:36.463Z",
+  "generatedAt": "2026-08-25T21:50:51.950Z",
   "source": "scripts/scrape",
   "facilities": [
     {
@@ -67,6 +67,83 @@
       "coords": [
         21.6428,
         -157.9251
+      ],
+      "coordsVerified": false
+    },
+    {
+      "id": "cannon-activities-center",
+      "name": "Cannon Activities Center (Open Gym)",
+      "category": "fitness",
+      "sourceUrl": "https://seasidersports.byuh.edu/seasider-sports/open-gym",
+      "hours": {
+        "mon": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "19:45"
+          ]
+        ],
+        "tue": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "wed": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "thu": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "fri": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "sat": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "sun": []
+      },
+      "exceptions": [],
+      "notes": "Free play. Requires a valid physical BYUH ID. The page warns the schedule changes without notice for university events, FHE, club events, weather and staffing. Monday evenings end at 7:45 pm. Sunday closed and Saturday hours are assumed — the page does not break the week down.",
+      "stale": false,
+      "coords": [
+        21.6406,
+        -157.9296
       ],
       "coordsVerified": false
     },
@@ -140,6 +217,83 @@
       "coords": [
         21.6415,
         -157.9286
+      ],
+      "coordsVerified": false
+    },
+    {
+      "id": "mckay-gym",
+      "name": "David O. McKay Gymnasium (Open Gym)",
+      "category": "fitness",
+      "sourceUrl": "https://seasidersports.byuh.edu/seasider-sports/open-gym",
+      "hours": {
+        "mon": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "19:45"
+          ]
+        ],
+        "tue": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "wed": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "thu": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "fri": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "sat": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "sun": []
+      },
+      "exceptions": [],
+      "notes": "Free play. Requires a valid physical BYUH ID. The page warns the schedule changes without notice for university events, FHE, club events, weather and staffing. Monday evenings end at 7:45 pm. Sunday closed and Saturday hours are assumed — the page does not break the week down.",
+      "stale": false,
+      "coords": [
+        21.6437,
+        -157.9279
       ],
       "coordsVerified": false
     },
@@ -500,6 +654,83 @@
       "coords": [
         21.6432,
         -157.9265
+      ],
+      "coordsVerified": false
+    },
+    {
+      "id": "turf-field",
+      "name": "Turf Field (Open Play)",
+      "category": "fitness",
+      "sourceUrl": "https://seasidersports.byuh.edu/seasider-sports/open-gym",
+      "hours": {
+        "mon": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "19:45"
+          ]
+        ],
+        "tue": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "wed": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "thu": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "fri": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "sat": [
+          [
+            "08:15",
+            "10:45"
+          ],
+          [
+            "17:15",
+            "22:45"
+          ]
+        ],
+        "sun": []
+      },
+      "exceptions": [],
+      "notes": "Free play. Requires a valid physical BYUH ID. The page warns the schedule changes without notice for university events, FHE, club events, weather and staffing. Monday evenings end at 7:45 pm. Sunday closed and Saturday hours are assumed — the page does not break the week down.",
+      "stale": false,
+      "coords": [
+        21.6399,
+        -157.9308
       ],
       "coordsVerified": false
     }

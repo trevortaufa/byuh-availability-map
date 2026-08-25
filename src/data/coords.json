@@ -1,0 +1,59 @@
+{
+  "_comment": "Hand-maintained. The hours pages don't publish coordinates, so these are supplied here and merged in by index.js. Every entry below was placed by eye near campus centre and is NOT verified — set verified:true once you've checked one against the real campus map.",
+  "joseph-f-smith-library": {
+    "coords": [
+      21.6432,
+      -157.9265
+    ],
+    "verified": false
+  },
+  "fitness-center": {
+    "coords": [
+      21.6416,
+      -157.9284
+    ],
+    "verified": false
+  },
+  "cardio-room": {
+    "coords": [
+      21.6415,
+      -157.9286
+    ],
+    "verified": false
+  },
+  "fitness-studio": {
+    "coords": [
+      21.6417,
+      -157.9282
+    ],
+    "verified": false
+  },
+  "banyan-dining-hall": {
+    "coords": [
+      21.6428,
+      -157.9251
+    ],
+    "verified": false
+  },
+  "cannon-activities-center": {
+    "coords": [
+      21.6406,
+      -157.9296
+    ],
+    "verified": false
+  },
+  "mckay-gym": {
+    "coords": [
+      21.6437,
+      -157.9279
+    ],
+    "verified": false
+  },
+  "turf-field": {
+    "coords": [
+      21.6399,
+      -157.9308
+    ],
+    "verified": false
+  }
+}

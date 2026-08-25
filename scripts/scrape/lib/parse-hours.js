@@ -98,16 +98,20 @@ export function parseIntervals(value) {
 
   for (const chunk of cleaned.split(/[|;]/)) {
     if (!/\d|midnight|noon/i.test(chunk)) continue
-    const m = chunk.match(new RegExp(`(${TIME})\\s*[-–—]\\s*(${TIME})`, 'i'))
-    if (!m) continue
+    // matchAll, not match: the open-gym page runs two ranges together with no
+    // separator at all ("8:15 am - 10:45 am5:15 pm - 10:45 pm"), so a single
+    // match would silently drop the evening block.
+    const ranges = chunk.matchAll(new RegExp(`(${TIME})\\s*[-–—]\\s*(${TIME})`, 'gi'))
 
-    const end = parseClock(m[2])
-    // The start borrows the end's am/pm when it has none: "1 - 10 pm".
-    const start = parseClock(m[1], m[2])
-    if (start === null || end === null) continue
+    for (const m of ranges) {
+      const end = parseClock(m[2])
+      // The start borrows the end's am/pm when it has none: "1 - 10 pm".
+      const start = parseClock(m[1], m[2])
+      if (start === null || end === null) continue
 
-    // "7:00 am - 12:00 am" runs through to midnight, not backwards in time.
-    out.push([pad(start), pad(end <= start ? 1440 : end)])
+      // "7:00 am - 12:00 am" runs through to midnight, not backwards in time.
+      out.push([pad(start), pad(end <= start ? 1440 : end)])
+    }
   }
 
   return out

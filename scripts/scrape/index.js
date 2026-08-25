@@ -15,15 +15,21 @@ import { dirname, join } from 'node:path'
 import * as library from './library.js'
 import * as seasider from './seasider.js'
 import * as banyan from './banyan.js'
+import * as opengym from './opengym.js'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const OUT = join(HERE, '..', '..', 'src', 'data', 'facilities.json')
-const COORDS = JSON.parse(readFileSync(join(HERE, 'coords.json'), 'utf8'))
+// Coordinates are app data, not scraped data — the app joins them on at
+// runtime (src/data/source.js). We read them here only to warn when a newly
+// scraped facility has no location yet.
+const COORDS_PATH = join(HERE, '..', '..', 'src', 'data', 'coords.json')
+const COORDS = JSON.parse(readFileSync(COORDS_PATH, 'utf8'))
 
 const SOURCES = [
   { name: 'library', mod: library },
   { name: 'seasider', mod: seasider },
   { name: 'banyan', mod: banyan },
+  { name: 'opengym', mod: opengym },
 ]
 
 function readPrevious() {
@@ -42,7 +48,6 @@ function validate(f) {
   if (!['library', 'dining', 'fitness', 'services'].includes(f.category)) {
     problems.push(`bad category "${f.category}"`)
   }
-  if (!Array.isArray(f.coords) || f.coords.length !== 2) problems.push('missing coords')
   for (const [day, intervals] of Object.entries(f.hours ?? {})) {
     for (const iv of intervals) {
       if (!/^\d{2}:\d{2}$/.test(iv[0]) || !/^\d{2}:\d{2}$/.test(iv[1])) {
@@ -74,12 +79,12 @@ async function main() {
 
   const facilities = []
   for (const f of byId.values()) {
-    const coord = COORDS[f.id]
-    if (!coord) {
-      console.error(`  SKIP  ${f.id} — no entry in coords.json, add one`)
-      continue
+    // A facility with no coordinates still ships — its hours are the useful
+    // part, and the list shows it. It just has no pin until someone places it.
+    if (!COORDS[f.id]) {
+      console.warn(`  warn  ${f.id} — no entry in src/data/coords.json, it will have no map pin`)
     }
-    const merged = { ...f, coords: coord.coords, coordsVerified: coord.verified }
+    const merged = { ...f }
     const problems = validate(merged)
     if (problems.length) {
       console.error(`  SKIP  ${f.id} — ${problems.join('; ')}`)

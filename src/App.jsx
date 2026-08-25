@@ -1,14 +1,25 @@
 import { useEffect, useMemo, useState } from 'react'
-import { getFacilities } from './data/source.js'
+import { getFacilities, getCoordsFile } from './data/source.js'
 import { getStatus, sortByStatus } from './lib/hours.js'
-import CampusMap from './components/CampusMap.jsx'
+import CampusMap, { CAMPUS_CENTER } from './components/CampusMap.jsx'
 import FacilityList from './components/FacilityList.jsx'
 import FilterBar from './components/FilterBar.jsx'
+import EditPanel from './components/EditPanel.jsx'
+
+/**
+ * Pin editing is gated on import.meta.env.DEV, which Vite replaces with a
+ * literal `false` in a production build. The whole branch is then dead code and
+ * gets tree-shaken out, so `?edit=1` does nothing on the deployed site — it is
+ * not merely hidden, it is not shipped.
+ */
+const EDIT_MODE =
+  import.meta.env.DEV && new URLSearchParams(window.location.search).has('edit')
 
 export default function App() {
   const [data, setData] = useState(null)
-  const [filter, setFilter] = useState('open')
+  const [filter, setFilter] = useState(EDIT_MODE ? 'all' : 'open')
   const [selected, setSelected] = useState(null)
+  const [overrides, setOverrides] = useState({})
 
   // A clock the UI re-reads, so a place that closes at 10 PM flips to Closed
   // without the user pulling to refresh. 30s is well under the granularity of
@@ -23,7 +34,12 @@ export default function App() {
     getFacilities().then(setData)
   }, [])
 
-  const facilities = data?.facilities ?? []
+  // Dragged positions win over the file until they're copied back into it.
+  const facilities = useMemo(() => {
+    const base = data?.facilities ?? []
+    if (!EDIT_MODE) return base
+    return base.map((f) => (overrides[f.id] ? { ...f, coords: overrides[f.id] } : f))
+  }, [data, overrides])
 
   const visible = useMemo(() => {
     const matching = facilities.filter((f) => {
@@ -36,14 +52,20 @@ export default function App() {
 
   const openCount = facilities.filter((f) => getStatus(f, now).open).length
 
+  const handleMove = (id, coords) => setOverrides((o) => ({ ...o, [id]: coords }))
+  // An unplaced facility has no pin to drag, so drop one at campus centre first.
+  const handlePlace = (id) => handleMove(id, CAMPUS_CENTER)
+
   return (
     <div className="app">
       <header className="app-header">
-        <h1>What&rsquo;s open</h1>
+        <h1>{EDIT_MODE ? 'Pin editor' : 'What\u2019s open'}</h1>
         <p className="subtitle">
           {data
-            ? `${openCount} of ${facilities.length} open right now on campus`
-            : 'BYU–Hawaii'}
+            ? EDIT_MODE
+              ? 'Drag any pin to reposition it'
+              : `${openCount} of ${facilities.length} open right now on campus`
+            : 'BYU\u2013Hawaii'}
         </p>
       </header>
 
@@ -54,18 +76,33 @@ export default function App() {
             selected={selected}
             onSelect={setSelected}
             now={now}
+            editMode={EDIT_MODE}
+            onMove={handleMove}
           />
-          <FilterBar active={filter} onChange={setFilter} />
-          <FacilityList
-            facilities={visible}
-            selected={selected}
-            onSelect={setSelected}
-            now={now}
-          />
-          <footer className="app-footer">
-            Hours scraped from byuh.edu. Locations approximate. Always check the
-            official page before making the walk.
-          </footer>
+
+          {EDIT_MODE ? (
+            <EditPanel
+              facilities={facilities}
+              coordsFile={getCoordsFile()}
+              overrides={overrides}
+              onPlace={handlePlace}
+              onReset={() => setOverrides({})}
+            />
+          ) : (
+            <>
+              <FilterBar active={filter} onChange={setFilter} />
+              <FacilityList
+                facilities={visible}
+                selected={selected}
+                onSelect={setSelected}
+                now={now}
+              />
+              <footer className="app-footer">
+                Hours scraped from byuh.edu. Locations approximate. Always check the
+                official page before making the walk.
+              </footer>
+            </>
+          )}
         </>
       ) : (
         <p className="loading">Loading&hellip;</p>
