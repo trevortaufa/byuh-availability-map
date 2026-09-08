@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { getFacilities } from './data/source.js'
 import { getStatus, sortByStatus } from './lib/hours.js'
+import { getFreshness } from './lib/freshness.js'
 import CampusMap, { CAMPUS_CENTER } from './components/CampusMap.jsx'
 import FacilityList from './components/FacilityList.jsx'
 import FilterBar from './components/FilterBar.jsx'
 import EditPanel from './components/EditPanel.jsx'
+import FreshnessNotice from './components/FreshnessNotice.jsx'
 
 /**
  * The admin panel is reachable on the live site at ?edit=1.
@@ -52,6 +54,10 @@ export default function App() {
 
   const openCount = facilities.filter((f) => getStatus(f, now).open).length
 
+  // Recomputed against the same ticking clock as the statuses, so the page
+  // ages in place rather than only on reload.
+  const freshness = useMemo(() => getFreshness(data?.generatedAt, now), [data, now])
+
   const handleMove = (id, coords) => setOverrides((o) => ({ ...o, [id]: coords }))
   // An unplaced facility has no pin to drag, so drop one at campus centre first.
   const handlePlace = (id) => handleMove(id, CAMPUS_CENTER)
@@ -95,6 +101,7 @@ export default function App() {
             />
           ) : (
             <>
+              <FreshnessNotice freshness={freshness} />
               <FilterBar active={filter} onChange={setFilter} />
               <FacilityList
                 facilities={visible}
@@ -103,8 +110,8 @@ export default function App() {
                 now={now}
               />
               <footer className="app-footer">
-                Hours scraped from byuh.edu. Locations approximate. Always check the
-                official page before making the walk.
+                {freshness.label} from byuh.edu. Locations approximate. Always check
+                the official page before making the walk.
               </footer>
             </>
           )}

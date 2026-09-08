@@ -27,7 +27,12 @@ export default function FacilityList({ facilities, selected, onSelect, now }) {
                 {CATEGORY_ICONS[f.category] ?? '📍'}
               </span>
               <span className="facility-body">
-                <span className="facility-name">{f.name}</span>
+                <span className="facility-name">
+                  {f.name}
+                  {/* This source failed its last scrape, so these hours are
+                      older than the rest of the page. */}
+                  {f.stale && <span className="stale-badge">old</span>}
+                </span>
                 <span className={`facility-status ${open ? 'is-open' : 'is-closed'}`}>
                   {label}
                   {detail && <span className="facility-detail"> · {detail}</span>}

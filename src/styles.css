@@ -375,3 +375,52 @@ body {
 .edit-status.is-bad {
   color: var(--closed);
 }
+
+/* Data freshness ------------------------------------------------------------
+   Two levels, deliberately different in weight: "aging" is a note the eye can
+   skip, "stale" is meant to be read before the user trusts a status. */
+.freshness-notice {
+  flex: none;
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin: 0 1rem 0.5rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.freshness-notice.is-aging {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+}
+
+.freshness-notice.is-stale,
+.freshness-notice.is-unknown {
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  color: #78350f;
+  font-weight: 500;
+}
+
+.freshness-icon {
+  flex: none;
+  line-height: 1.35;
+}
+
+/* Per-facility badge: this one source failed its last scrape, so its hours are
+   older than the rest of the page and can't be trusted at the same level. */
+.stale-badge {
+  margin-left: 0.375rem;
+  padding: 0.0625rem 0.3125rem;
+  border-radius: 0.25rem;
+  background: #fef3c7;
+  color: #78350f;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  vertical-align: 0.05em;
+}
