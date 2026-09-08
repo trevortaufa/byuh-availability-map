@@ -35,7 +35,8 @@ function normaliseDay(token) {
   return null
 }
 
-function expandDays(spec) {
+/** "Mon - Thur" -> ['mon','tue','wed','thu']. "Monday to Friday" works too. */
+export function expandDays(spec) {
   const tokens = spec
     .split(new RegExp(RANGE_SEP, 'i'))
     .map((s) => normaliseDay(s.trim()))

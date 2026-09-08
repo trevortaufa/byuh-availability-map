@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T08:00:00.478Z",
+  "generatedAt": "2026-09-08T08:09:05.806Z",
   "source": "scripts/scrape",
   "facilities": [
     {
@@ -58,11 +58,29 @@
             "20:00"
           ]
         ],
-        "sat": [],
-        "sun": []
+        "sat": [
+          [
+            "09:00",
+            "13:00"
+          ],
+          [
+            "16:00",
+            "20:00"
+          ]
+        ],
+        "sun": [
+          [
+            "11:00",
+            "13:30"
+          ],
+          [
+            "16:00",
+            "18:30"
+          ]
+        ]
       },
       "exceptions": [],
-      "notes": "Monday–Friday only. Weekend and holiday hours are published outside the table on the source page and are not yet scraped — check the page for Sat/Sun.",
+      "notes": "Closed between meals; those gaps are already excluded. The page also lists Fast Sunday: 17:00-19:00 and Holidays: 08:00-14:00, 16:00-20:00, without dates — check it around holidays and the first Sunday of the month.",
       "stale": false
     },
     {

@@ -34,20 +34,33 @@ for anyone off-island, and it looks correct the whole time you're developing in 
 **Crawl delay.** `byuh.edu/robots.txt` sets `Crawl-delay: 10`, so the scraper waits
 10 seconds between requests. That's why a full run takes ~30s. Don't remove it.
 
+## Refreshing
+
+`.github/workflows/refresh-hours.yml` re-scrapes daily at 05:00 campus time and
+commits `src/data/facilities.json`, which is what deploys. It commits even when
+nothing changed, because `generatedAt` is what the freshness banner reads and
+"checked today, nothing had changed" is the fact it needs to show.
+
+Run it by hand from the Actions tab, or locally with `npm run scrape`.
+
 ## Scraper sources
 
 | Source | Facilities | Notes |
 |---|---|---|
 | `library.byuh.edu` | Joseph F. Smith Library | Weekly hours + 17 dated holiday overrides |
 | `seasidersports.byuh.edu` | Fitness Center, Cardio Room, Fitness Studio | Multi-interval days; cleaning gaps excluded |
-| `foodservices.byuh.edu` | Banyan Dining Hall | **Mon–Fri only** — weekend hours aren't in a table and aren't parsed yet |
+| `foodservices.byuh.edu` | Banyan Dining Hall | All seven days. "Fast Sunday" and "Holidays" give times but no dates, so they go in the note, not the hours |
 
 If a source breaks, the scraper keeps the previous entries and marks them `stale`
 rather than dropping facilities off the map.
 
 ## Known gaps
 
-- Coordinates in `scripts/scrape/coords.json` are placed by eye and all have
+- Coordinates in `src/data/coords.json` are placed by eye and all have
   `verified: false`. They need checking against the real campus map.
-- Banyan weekend and holiday hours are unscraped.
-- No scheduled refresh yet — `npm run scrape` is manual.
+- Banyan's "Fast Sunday" and "Holidays" rows are surfaced as a note only. The
+  page gives times without dates, so publishing them as hours would mean guessing
+  which dates they land on.
+- Fitness facility hours for a weekday hidden behind a holiday notice are carried
+  over from the previous scrape, so they can lag a real change by one term
+  boundary.
