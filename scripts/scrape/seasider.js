@@ -16,7 +16,7 @@ const FACILITIES = [
   { id: 'fitness-studio', name: 'Fitness Studio', heading: 'Fitness Studio Hours' },
 ]
 
-export function parse($) {
+export function parse($, now = new Date()) {
   $('script,style,noscript').remove()
   const text = $('body').text().replace(/\s+/g, ' ')
 
@@ -31,8 +31,9 @@ export function parse($) {
     const end = nextHeading ? text.indexOf(nextHeading, start) : start + 800
     const section = text.slice(start + f.heading.length, end === -1 ? undefined : end)
 
-    const hours = withClosedDefaults(parseHoursBlob(section))
-    if (Object.values(hours).every((d) => d.length === 0)) continue
+    const { hours: weekly, holidays } = parseHoursBlob(section, now)
+    const hours = withClosedDefaults(weekly)
+    if (Object.values(hours).every((d) => d.length === 0) && holidays.length === 0) continue
 
     out.push({
       id: f.id,
@@ -40,7 +41,11 @@ export function parse($) {
       category: 'fitness',
       sourceUrl: SOURCE_URL,
       hours,
-      exceptions: [],
+      exceptions: holidays.map(({ date, label, intervals }) => ({ date, label, intervals })),
+      // A holiday row replaces that weekday's row on the page, so this scrape
+      // never saw the regular hours for it. index.js carries the previous
+      // scrape's value forward for these days instead of writing "closed".
+      carryOverDays: holidays.map((h) => h.weekday),
       notes: 'Cleaning and faculty-hour closures are already excluded from the times shown.',
     })
   }

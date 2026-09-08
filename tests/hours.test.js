@@ -66,6 +66,6 @@ test('parses "12 noon" as an end time', () => {
 })
 
 test('a day range expands to every day in it', () => {
-  const h = parseHoursBlob('Mon - Thur: 7:00 am – 12:00 am')
-  assert.deepEqual(Object.keys(h).sort(), ['mon', 'thu', 'tue', 'wed'])
+  const { hours } = parseHoursBlob('Mon - Thur: 7:00 am – 12:00 am')
+  assert.deepEqual(Object.keys(hours).sort(), ['mon', 'thu', 'tue', 'wed'])
 })

@@ -10,6 +10,11 @@
  * on the day tokens rather than trusting whitespace.
  */
 
+// Campus time is the app's single source of truth for what "today" means,
+// so resolving a holiday's weekday to a date reuses it rather than
+// re-deriving the timezone rule here.
+import { nowInCampusTime, WEEKDAYS } from '../../../src/lib/time.js'
+
 // Range order as the pages write them (Mon-Thur, Mon-Fri, Sat-Sun).
 const RANGE_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 const ALL_DAYS = RANGE_ORDER
@@ -79,13 +84,19 @@ const pad = (mins) =>
 /**
  * Pull intervals out of a value string. Returns [] for "Closed".
  *
- * Parenthetical closures ("Closed for Cleaning: 8 - 9 am") are stripped first —
- * they describe a gap that the published intervals already exclude, so parsing
- * them as opening times would make the place look open while it is being cleaned.
+ * Stated closures ("Closed for Cleaning: 8 - 9 am") are stripped first — they
+ * describe a gap that the published intervals already exclude, so parsing them
+ * as opening times would make the place look open while it is shut.
+ *
+ * The "Closed for ..." arm is deliberately generic rather than a list of known
+ * reasons. It was a list once, and the page shipped "Closed for Devotional"
+ * against the Fitness Studio, which the list did not cover — so an explicit
+ * closure was stored as an opening. Matching the phrase instead of the reason
+ * means a new reason costs nothing.
  */
 export function parseIntervals(value) {
   const cleaned = value
-    .replace(/closed for cleaning\s*:?[^|]*/gi, '|')
+    .replace(/closed for\s+[^|]*/gi, '|')
     .replace(/faculty hour\s*:?[^|]*/gi, '|')
     .replace(/women'?s hour[^|]*/gi, '|')
 
@@ -118,30 +129,95 @@ export function parseIntervals(value) {
 }
 
 /**
+ * A day row carrying a named override instead of the regular hours, as in
+ * "Monday Labor Day Hours6 am - 12 noon".
+ *
+ * There is deliberately no word-boundary escape after "hours": the page runs the
+ * label straight into the first digit ("Hours6 am"), and 's' to '6' is not a
+ * word boundary. The lookahead does that job instead, and also stops a stray
+ * sentence ending in "hours" from matching.
+ */
+const HOLIDAY_LABEL =
+  /^\s*([A-Za-z][A-Za-z'’.\- ]*?)\s*hours\s*:?\s*(?=\d|noon|midnight|closed)/i
+
+/**
+ * The campus date of the next `weekday` on or after today, as YYYY-MM-DD.
+ *
+ * The pages publish a holiday against a weekday, never a date, so the date has
+ * to be inferred. "On or after today" is the right reading: these notices go up
+ * shortly before the day and come down after it.
+ */
+export function upcomingDate(weekday, now = new Date()) {
+  const { weekday: today, date } = nowInCampusTime(now)
+  const offset = (WEEKDAYS.indexOf(weekday) - WEEKDAYS.indexOf(today) + 7) % 7
+  const d = new Date(`${date}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + offset)
+  return d.toISOString().slice(0, 10)
+}
+
+/**
  * Split a blob into weekday -> intervals. Works with or without colons after
  * the day name. Days the text never mentions are omitted.
+ *
+ * Holiday rows come back separately rather than folded into `hours`. A holiday's
+ * times are true for one date, not every week, and writing them into the weekly
+ * slot silently destroys the real hours for that weekday — the Labor Day
+ * notice overwrote every Monday for three fitness facilities.
+ *
+ * @returns {{
+ *   hours: Record<string, Array>,
+ *   holidays: Array<{weekday: string, date: string, label: string, intervals: Array}>
+ * }}
  */
-export function parseHoursBlob(text) {
-  // Break before each "Day..." marker — but NOT before a day that is the tail
-  // of a range. Without these lookbehinds, "Mon - Thur: 7:00 am" splits at both
-  // "Mon" and "Thur", so the range collapses to Thursday alone and Mon–Wed
+export function parseHoursBlob(text, now = new Date()) {
+  // Break before each "Day..." marker — but NOT before a day that is the
+  // tail of a range. Without these lookbehinds, "Mon - Thur: 7:00 am" splits at
+  // both "Mon" and "Thur", so the range collapses to Thursday alone and Mon-Wed
   // silently come back closed.
   const NOT_RANGE_TAIL = String.raw`(?<![-–—]\s?)(?<!\bto\s)(?<!&\s?)`
+  // A holiday row reads "Monday Labor Day Hours6 am", so the day is followed by
+  // a label rather than a digit. Allowing a short run of words before the time
+  // is what lets that row become its own line at all.
+  const BEFORE_TIME = String.raw`(?:[A-Za-z'’.\- ]{0,30}hours\s*:?\s*)?`
   const split = text.replace(
-    new RegExp(`(?=${NOT_RANGE_TAIL}${DAY_SPEC}\\s*:?\\s*(?:\\d|closed))`, 'gi'),
+    new RegExp(
+      `(?=${NOT_RANGE_TAIL}${DAY_SPEC}\\s*:?\\s*${BEFORE_TIME}(?:\\d|closed))`,
+      'gi',
+    ),
     '\n',
   )
 
   const hours = {}
+  const holidays = []
+
   for (const line of split.split('\n')) {
     const m = line.match(new RegExp(`^\\s*(${DAY_SPEC})\\s*:?\\s*(.*)$`, 'i'))
     if (!m) continue
     const days = expandDays(m[1])
     if (days.length === 0) continue
+
+    const named = m[2].match(HOLIDAY_LABEL)
+    if (named) {
+      const intervals = parseIntervals(m[2].slice(named[0].length))
+      for (const day of days) {
+        holidays.push({
+          weekday: day,
+          date: upcomingDate(day, now),
+          label: named[1].trim(),
+          intervals,
+        })
+      }
+      // Deliberately no `hours[day]` write. This page does not say what the
+      // regular hours for that weekday are, so the caller carries forward the
+      // previous scrape's value instead of guessing.
+      continue
+    }
+
     const intervals = parseIntervals(m[2])
     for (const day of days) hours[day] = intervals
   }
-  return hours
+
+  return { hours, holidays }
 }
 
 /** Fill any day the source didn't mention with "closed". */

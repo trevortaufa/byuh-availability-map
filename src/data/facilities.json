@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-25T21:50:51.950Z",
+  "generatedAt": "2026-09-08T08:00:00.478Z",
   "source": "scripts/scrape",
   "facilities": [
     {
@@ -63,12 +63,7 @@
       },
       "exceptions": [],
       "notes": "Monday–Friday only. Weekend and holiday hours are published outside the table on the source page and are not yet scraped — check the page for Sat/Sun.",
-      "stale": false,
-      "coords": [
-        21.6428,
-        -157.9251
-      ],
-      "coordsVerified": false
+      "stale": false
     },
     {
       "id": "cannon-activities-center",
@@ -78,61 +73,37 @@
       "hours": {
         "mon": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
-            "17:15",
-            "19:45"
+            "05:15",
+            "22:45"
           ]
         ],
         "tue": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
-            "17:15",
+            "05:15",
             "22:45"
           ]
         ],
         "wed": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
-            "17:15",
+            "05:15",
             "22:45"
           ]
         ],
         "thu": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
-            "17:15",
+            "05:15",
             "22:45"
           ]
         ],
         "fri": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
-            "17:15",
+            "05:15",
             "22:45"
           ]
         ],
         "sat": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
-            "17:15",
+            "05:15",
             "22:45"
           ]
         ],
@@ -140,12 +111,7 @@
       },
       "exceptions": [],
       "notes": "Free play. Requires a valid physical BYUH ID. The page warns the schedule changes without notice for university events, FHE, club events, weather and staffing. Monday evenings end at 7:45 pm. Sunday closed and Saturday hours are assumed — the page does not break the week down.",
-      "stale": false,
-      "coords": [
-        21.6406,
-        -157.9296
-      ],
-      "coordsVerified": false
+      "stale": false
     },
     {
       "id": "cardio-room",
@@ -165,17 +131,21 @@
         ],
         "tue": [
           [
-            "06:00",
+            "05:00",
             "08:00"
           ],
           [
             "09:00",
+            "11:00"
+          ],
+          [
+            "12:00",
             "22:00"
           ]
         ],
         "wed": [
           [
-            "06:00",
+            "05:00",
             "08:00"
           ],
           [
@@ -185,7 +155,7 @@
         ],
         "thu": [
           [
-            "06:00",
+            "05:00",
             "08:00"
           ],
           [
@@ -195,7 +165,7 @@
         ],
         "fri": [
           [
-            "06:00",
+            "05:00",
             "08:00"
           ],
           [
@@ -211,14 +181,20 @@
         ],
         "sun": []
       },
-      "exceptions": [],
-      "notes": "Cleaning and faculty-hour closures are already excluded from the times shown.",
-      "stale": false,
-      "coords": [
-        21.6415,
-        -157.9286
+      "exceptions": [
+        {
+          "date": "2026-09-07",
+          "label": "Labor Day",
+          "intervals": [
+            [
+              "06:00",
+              "12:00"
+            ]
+          ]
+        }
       ],
-      "coordsVerified": false
+      "notes": "Cleaning and faculty-hour closures are already excluded from the times shown.",
+      "stale": false
     },
     {
       "id": "mckay-gym",
@@ -228,19 +204,11 @@
       "hours": {
         "mon": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
             "17:15",
             "19:45"
           ]
         ],
         "tue": [
-          [
-            "08:15",
-            "10:45"
-          ],
           [
             "17:15",
             "22:45"
@@ -248,19 +216,11 @@
         ],
         "wed": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
             "17:15",
             "22:45"
           ]
         ],
         "thu": [
-          [
-            "08:15",
-            "10:45"
-          ],
           [
             "17:15",
             "22:45"
@@ -268,19 +228,11 @@
         ],
         "fri": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
             "17:15",
             "22:45"
           ]
         ],
         "sat": [
-          [
-            "08:15",
-            "10:45"
-          ],
           [
             "17:15",
             "22:45"
@@ -290,12 +242,7 @@
       },
       "exceptions": [],
       "notes": "Free play. Requires a valid physical BYUH ID. The page warns the schedule changes without notice for university events, FHE, club events, weather and staffing. Monday evenings end at 7:45 pm. Sunday closed and Saturday hours are assumed — the page does not break the week down.",
-      "stale": false,
-      "coords": [
-        21.6437,
-        -157.9279
-      ],
-      "coordsVerified": false
+      "stale": false
     },
     {
       "id": "fitness-center",
@@ -319,49 +266,61 @@
         ],
         "tue": [
           [
-            "06:00",
+            "05:00",
             "08:00"
           ],
           [
             "09:00",
-            "12:00"
+            "11:00"
           ],
           [
             "13:00",
+            "17:00"
+          ],
+          [
+            "18:00",
             "22:00"
           ]
         ],
         "wed": [
           [
-            "06:00",
+            "05:00",
             "08:00"
           ],
           [
             "09:00",
-            "12:00"
+            "11:00"
           ],
           [
             "13:00",
+            "17:00"
+          ],
+          [
+            "18:00",
             "22:00"
           ]
         ],
         "thu": [
           [
-            "06:00",
+            "05:00",
             "08:00"
           ],
           [
             "09:00",
-            "12:00"
+            "11:00"
           ],
           [
             "13:00",
+            "17:00"
+          ],
+          [
+            "18:00",
             "22:00"
           ]
         ],
         "fri": [
           [
-            "06:00",
+            "05:00",
             "08:00"
           ],
           [
@@ -369,7 +328,7 @@
             "12:00"
           ],
           [
-            "13:00",
+            "15:00",
             "22:00"
           ]
         ],
@@ -381,14 +340,20 @@
         ],
         "sun": []
       },
-      "exceptions": [],
-      "notes": "Cleaning and faculty-hour closures are already excluded from the times shown.",
-      "stale": false,
-      "coords": [
-        21.6416,
-        -157.9284
+      "exceptions": [
+        {
+          "date": "2026-09-07",
+          "label": "Labor day",
+          "intervals": [
+            [
+              "06:00",
+              "12:00"
+            ]
+          ]
+        }
       ],
-      "coordsVerified": false
+      "notes": "Cleaning and faculty-hour closures are already excluded from the times shown.",
+      "stale": false
     },
     {
       "id": "fitness-studio",
@@ -408,7 +373,11 @@
         ],
         "tue": [
           [
-            "06:00",
+            "05:00",
+            "11:00"
+          ],
+          [
+            "12:00",
             "14:00"
           ],
           [
@@ -418,7 +387,7 @@
         ],
         "wed": [
           [
-            "06:00",
+            "05:00",
             "14:00"
           ],
           [
@@ -428,7 +397,7 @@
         ],
         "thu": [
           [
-            "06:00",
+            "05:00",
             "14:00"
           ],
           [
@@ -438,7 +407,7 @@
         ],
         "fri": [
           [
-            "06:00",
+            "05:00",
             "14:00"
           ],
           [
@@ -454,14 +423,20 @@
         ],
         "sun": []
       },
-      "exceptions": [],
-      "notes": "Cleaning and faculty-hour closures are already excluded from the times shown.",
-      "stale": false,
-      "coords": [
-        21.6417,
-        -157.9282
+      "exceptions": [
+        {
+          "date": "2026-09-07",
+          "label": "Labor Day",
+          "intervals": [
+            [
+              "06:00",
+              "12:00"
+            ]
+          ]
+        }
       ],
-      "coordsVerified": false
+      "notes": "Cleaning and faculty-hour closures are already excluded from the times shown.",
+      "stale": false
     },
     {
       "id": "joseph-f-smith-library",
@@ -650,12 +625,7 @@
         }
       ],
       "notes": "Closed Sundays and during devotionals. Academic Computing Lab: Library: Mon - Thur: 7:00 am - 11:45 pmFri: 7:00 am - 7:45 pmSat: 9:00 am - 2:45 pm Makerspace: Mon - Fri: 8:30 am - 4:30 pmSat: ClosedCommunity guests may email inquiries to copycenter@byuh.edu or call (808) 675-3870 Circulation Desk: Mon - Thur: 7:00 am - 11:50 pmFri: 7:00 am - 7:50 pmSat: 9:00 am - 2:50 pm Pacific Islands Collection: Mon - Thur: 9:00 am - 11:50 pmFri: 7:00 am - 7:50 pmSat: 9:00 am - 2:50 pmHolidays & Semester Breaks: 8:00 am - 4:50 pmPhone: (808) 675-3867 University Archives: Only by appointment",
-      "stale": false,
-      "coords": [
-        21.6432,
-        -157.9265
-      ],
-      "coordsVerified": false
+      "stale": false
     },
     {
       "id": "turf-field",
@@ -665,61 +635,37 @@
       "hours": {
         "mon": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
-            "17:15",
-            "19:45"
+            "05:15",
+            "22:45"
           ]
         ],
         "tue": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
-            "17:15",
+            "05:15",
             "22:45"
           ]
         ],
         "wed": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
-            "17:15",
+            "05:15",
             "22:45"
           ]
         ],
         "thu": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
-            "17:15",
+            "05:15",
             "22:45"
           ]
         ],
         "fri": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
-            "17:15",
+            "05:15",
             "22:45"
           ]
         ],
         "sat": [
           [
-            "08:15",
-            "10:45"
-          ],
-          [
-            "17:15",
+            "05:15",
             "22:45"
           ]
         ],
@@ -727,12 +673,7 @@
       },
       "exceptions": [],
       "notes": "Free play. Requires a valid physical BYUH ID. The page warns the schedule changes without notice for university events, FHE, club events, weather and staffing. Monday evenings end at 7:45 pm. Sunday closed and Saturday hours are assumed — the page does not break the week down.",
-      "stale": false,
-      "coords": [
-        21.6399,
-        -157.9308
-      ],
-      "coordsVerified": false
+      "stale": false
     }
   ]
 }

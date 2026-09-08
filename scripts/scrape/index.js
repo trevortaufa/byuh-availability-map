@@ -77,8 +77,26 @@ async function main() {
     }
   }
 
+  const prevById = new Map(previous.facilities.map((f) => [f.id, f]))
+
   const facilities = []
   for (const f of byId.values()) {
+    // A holiday notice replaces that weekday's row on the source page, so this
+    // scrape genuinely does not know the regular hours for it. Writing what the
+    // page said would publish the holiday times as every week's; writing []
+    // would close the building for good. Carrying the last known value forward
+    // is the only option that does not invent an answer.
+    for (const day of f.carryOverDays ?? []) {
+      const kept = prevById.get(f.id)?.hours?.[day]
+      if (kept) {
+        f.hours[day] = kept
+        console.log(`  hold  ${f.id} ${day} — holiday on the page, kept previous hours`)
+      } else {
+        console.warn(`  warn  ${f.id} ${day} — holiday on the page and no previous hours to keep`)
+      }
+    }
+    delete f.carryOverDays
+
     // A facility with no coordinates still ships — its hours are the useful
     // part, and the list shows it. It just has no pin until someone places it.
     if (!COORDS[f.id]) {

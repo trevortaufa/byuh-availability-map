@@ -13,7 +13,7 @@ import { parseHoursBlob, withClosedDefaults, parseIntervals, parseDates } from '
 
 export const SOURCE_URL = 'https://library.byuh.edu/hours-of-the-library'
 
-export function parse($) {
+export function parse($, now = new Date()) {
   const rows = []
   $('table tr').each((_, tr) => {
     const cells = $(tr).find('td,th').map((__, c) => $(c).text().trim()).get()
@@ -23,10 +23,13 @@ export function parse($) {
   const main = rows.find(([name]) => /^library building$/i.test(name))
   if (!main) throw new Error('library: "Library Building" row not found — page layout changed')
 
-  const hours = withClosedDefaults(parseHoursBlob(main[1]))
+  const { hours: weekly, holidays } = parseHoursBlob(main[1], now)
+  const hours = withClosedDefaults(weekly)
 
   // Holiday table: Holiday | Date | Hours. "CLOSED" becomes an empty day.
-  const exceptions = []
+  // Seeded with any holiday written into the weekly blob itself, which the
+  // dated table below does not always repeat.
+  const exceptions = holidays.map(({ date, label, intervals }) => ({ date, label, intervals }))
   for (const [label, date, times] of rows) {
     if (!/\d{4}/.test(date ?? '')) continue
     if (/^holiday$/i.test(label)) continue
@@ -53,6 +56,7 @@ export function parse($) {
       sourceUrl: SOURCE_URL,
       hours,
       exceptions,
+      carryOverDays: holidays.map((h) => h.weekday),
       notes: ['Closed Sundays and during devotionals.', ...areas].join(' '),
     },
   ]
