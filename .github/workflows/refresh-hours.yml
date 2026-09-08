@@ -1,0 +1,76 @@
+# Re-scrape published hours and commit the result.
+#
+# Why a scheduled commit rather than a serverless cron: the scraper honours
+# byuh.edu's 10-second crawl delay, so a full run takes ~40s and grows with
+# every source added. That sits badly against a serverless timeout. It also
+# means each change to campus hours lands in git history, which is where the
+# scraper reads the *previous* run from when a holiday notice hides a weekday's
+# regular hours.
+#
+# Vercel deploys from main, so pushing here is what publishes the new hours.
+name: Refresh hours
+
+on:
+  schedule:
+    # 15:00 UTC = 05:00 in Pacific/Honolulu, which has no daylight saving. Early
+    # enough that the day's hours are published before anyone checks them.
+    - cron: '0 15 * * *'
+  workflow_dispatch:
+
+# Two runs scraping and pushing at once would conflict, and being polite to the
+# source site means never doubling up on requests.
+concurrency:
+  group: refresh-hours
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      # Needed to push the refreshed facilities.json back to main.
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # A parser regression would quietly reshape every facility's hours, and
+      # the commit below would publish it. Gate on the suite first.
+      - name: Test
+        run: npm test
+
+      - name: Scrape
+        run: npm run scrape
+
+      # This commits even when the hours are identical, and that is deliberate.
+      # `generatedAt` is what the freshness banner reads, and "we checked today
+      # and nothing had changed" is exactly the fact it needs to show. Skipping
+      # the commit would let the site claim the data was going stale while this
+      # job was verifying it daily. The message distinguishes the two cases so
+      # the history stays readable.
+      - name: Commit the refreshed hours
+        run: |
+          if git diff --quiet -- src/data/facilities.json; then
+            echo "Scrape produced a byte-identical file, including the timestamp."
+            exit 0
+          fi
+
+          # Every line of the diff bar the timestamp, if any.
+          if git diff -U0 -- src/data/facilities.json \
+              | grep -E '^[+-]' | grep -vE '^(\+\+\+|---)' | grep -qv '"generatedAt"'; then
+            MESSAGE='Refresh scraped hours'
+          else
+            MESSAGE='Re-verify scraped hours (no change)'
+          fi
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/data/facilities.json
+          git commit -m "$MESSAGE"
+          git push
