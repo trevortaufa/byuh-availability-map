@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-12T21:48:33.547Z",
+  "generatedAt": "2026-11-13T21:21:57.249Z",
   "source": "scripts/scrape",
   "facilities": [
     {
@@ -81,55 +81,7 @@
       },
       "exceptions": [],
       "notes": "Closed between meals; those gaps are already excluded. The page also lists Fast Sunday: 17:00-19:00 and Holidays: 08:00-14:00, 16:00-20:00, without dates — check it around holidays and the first Sunday of the month.",
-      "stale": true
-    },
-    {
-      "id": "cannon-activities-center",
-      "name": "Cannon Activities Center (Open Gym)",
-      "category": "fitness",
-      "sourceUrl": "https://seasidersports.byuh.edu/seasider-sports/open-gym",
-      "hours": {
-        "mon": [
-          [
-            "05:15",
-            "22:45"
-          ]
-        ],
-        "tue": [
-          [
-            "05:15",
-            "22:45"
-          ]
-        ],
-        "wed": [
-          [
-            "05:15",
-            "22:45"
-          ]
-        ],
-        "thu": [
-          [
-            "05:15",
-            "22:45"
-          ]
-        ],
-        "fri": [
-          [
-            "05:15",
-            "22:45"
-          ]
-        ],
-        "sat": [
-          [
-            "05:15",
-            "22:45"
-          ]
-        ],
-        "sun": []
-      },
-      "exceptions": [],
-      "notes": "Free play. Requires a valid physical BYUH ID. The page warns the schedule changes without notice for university events, FHE, club events, weather and staffing. Monday evenings end at 7:45 pm. Sunday closed and Saturday hours are assumed — the page does not break the week down.",
-      "stale": true
+      "stale": false
     },
     {
       "id": "cardio-room",
@@ -139,7 +91,7 @@
       "hours": {
         "mon": [
           [
-            "06:00",
+            "05:00",
             "08:00"
           ],
           [
@@ -199,20 +151,9 @@
         ],
         "sun": []
       },
-      "exceptions": [
-        {
-          "date": "2026-09-07",
-          "label": "Labor Day",
-          "intervals": [
-            [
-              "06:00",
-              "12:00"
-            ]
-          ]
-        }
-      ],
+      "exceptions": [],
       "notes": "Cleaning and faculty-hour closures are already excluded from the times shown.",
-      "stale": true
+      "stale": false
     },
     {
       "id": "mckay-gym",
@@ -229,38 +170,38 @@
         "tue": [
           [
             "17:15",
-            "22:45"
+            "19:45"
           ]
         ],
         "wed": [
           [
             "17:15",
-            "22:45"
+            "19:45"
           ]
         ],
         "thu": [
           [
             "17:15",
-            "22:45"
+            "19:45"
           ]
         ],
         "fri": [
           [
             "17:15",
-            "22:45"
+            "19:45"
           ]
         ],
         "sat": [
           [
             "17:15",
-            "22:45"
+            "19:45"
           ]
         ],
         "sun": []
       },
       "exceptions": [],
       "notes": "Free play. Requires a valid physical BYUH ID. The page warns the schedule changes without notice for university events, FHE, club events, weather and staffing. Monday evenings end at 7:45 pm. Sunday closed and Saturday hours are assumed — the page does not break the week down.",
-      "stale": true
+      "stale": false
     },
     {
       "id": "fitness-center",
@@ -270,15 +211,19 @@
       "hours": {
         "mon": [
           [
-            "06:00",
+            "05:00",
             "08:00"
           ],
           [
             "09:00",
-            "12:00"
+            "11:00"
           ],
           [
-            "13:00",
+            "01:00",
+            "17:00"
+          ],
+          [
+            "18:00",
             "22:00"
           ]
         ],
@@ -358,20 +303,9 @@
         ],
         "sun": []
       },
-      "exceptions": [
-        {
-          "date": "2026-09-07",
-          "label": "Labor day",
-          "intervals": [
-            [
-              "06:00",
-              "12:00"
-            ]
-          ]
-        }
-      ],
+      "exceptions": [],
       "notes": "Cleaning and faculty-hour closures are already excluded from the times shown.",
-      "stale": true
+      "stale": false
     },
     {
       "id": "fitness-studio",
@@ -381,7 +315,7 @@
       "hours": {
         "mon": [
           [
-            "06:00",
+            "05:00",
             "14:00"
           ],
           [
@@ -441,20 +375,9 @@
         ],
         "sun": []
       },
-      "exceptions": [
-        {
-          "date": "2026-09-07",
-          "label": "Labor Day",
-          "intervals": [
-            [
-              "06:00",
-              "12:00"
-            ]
-          ]
-        }
-      ],
+      "exceptions": [],
       "notes": "Cleaning and faculty-hour closures are already excluded from the times shown.",
-      "stale": true
+      "stale": false
     },
     {
       "id": "joseph-f-smith-library",
@@ -642,8 +565,8 @@
           "label": "New Year's Eve"
         }
       ],
-      "notes": "Closed Sundays and during devotionals. Academic Computing Lab: Library: Mon - Thur: 7:00 am - 11:45 pmFri: 7:00 am - 7:45 pmSat: 9:00 am - 2:45 pm Makerspace: Mon - Fri: 8:30 am - 4:30 pmSat: ClosedCommunity guests may email inquiries to copycenter@byuh.edu or call (808) 675-3870 Circulation Desk: Mon - Thur: 7:00 am - 11:50 pmFri: 7:00 am - 7:50 pmSat: 9:00 am - 2:50 pm Pacific Islands Collection: Mon - Thur: 9:00 am - 11:50 pmFri: 7:00 am - 7:50 pmSat: 9:00 am - 2:50 pmHolidays & Semester Breaks: 8:00 am - 4:50 pmPhone: (808) 675-3867 University Archives: Only by appointment",
-      "stale": true
+      "notes": "Closed Sundays and during devotionals. Academic Computing Lab: Library: Mon - Thur: 7:00 am - 11:45 pmFri: 7:00 am - 7:45 pmSat: 9:00 am - 2:45 pm Makerspace: Mon - Fri: 8:30 am - 8:00 pmSat: ClosedCommunity guests may email inquiries to copycenter@byuh.edu (opens in a new tab) or call (808) 675-3870 (opens in a new tab) Circulation Desk: Mon - Thur: 7:00 am - 11:50 pmFri: 7:00 am - 7:50 pmSat: 9:00 am - 2:50 pm Pacific Islands Collection: Mon - Thur: 9:00 am - 11:45 pmFri: 9:00 am - 7:45 pmSat: 9:00 am - 2:45 pmHolidays & Semester Breaks: 8:00 am - 4:50 pmPhone: (808) 675-3867 (opens in a new tab) University Archives: Mon - Fri: 9:00 am - 5:00 pmSat: ClosedClosed: DevotionalsEmail: archives@byuh.edu (opens in a new tab)Phone: (808) 675-3868 (opens in a new tab)",
+      "stale": false
     },
     {
       "id": "turf-field",
@@ -653,45 +576,45 @@
       "hours": {
         "mon": [
           [
-            "05:15",
-            "22:45"
+            "18:15",
+            "19:45"
           ]
         ],
         "tue": [
           [
-            "05:15",
-            "22:45"
+            "18:15",
+            "19:45"
           ]
         ],
         "wed": [
           [
-            "05:15",
-            "22:45"
+            "18:15",
+            "19:45"
           ]
         ],
         "thu": [
           [
-            "05:15",
-            "22:45"
+            "18:15",
+            "19:45"
           ]
         ],
         "fri": [
           [
-            "05:15",
-            "22:45"
+            "18:15",
+            "19:45"
           ]
         ],
         "sat": [
           [
-            "05:15",
-            "22:45"
+            "18:15",
+            "19:45"
           ]
         ],
         "sun": []
       },
       "exceptions": [],
       "notes": "Free play. Requires a valid physical BYUH ID. The page warns the schedule changes without notice for university events, FHE, club events, weather and staffing. Monday evenings end at 7:45 pm. Sunday closed and Saturday hours are assumed — the page does not break the week down.",
-      "stale": true
+      "stale": false
     }
   ]
 }
